@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gosaudi/MyBottomNavBar.dart';
+import 'package:gosaudi/screens/login_screen.dart';
+import 'package:gosaudi/screens/registeration_screen.dart';
+import 'package:gosaudi/screens/welcome_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -7,6 +9,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,39 +18,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Go Saudi'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-              colors: [Color(0xFF0F9A4F), Color(0xFFE7DC7D)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter)),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[],
-          ),
-        ),
-        bottomNavigationBar: MyBottomNavBar(),
-      ),
+      debugShowCheckedModeBanner: false,
+      initialRoute: WelcomeScreen.id,
+      routes: {
+        WelcomeScreen.id: (context) => WelcomeScreen(),
+        LoginScreen.id: (context) => LoginScreen(),
+        RegisterationScreen.id: (context) => RegisterationScreen(),
+      },
     );
   }
 }
