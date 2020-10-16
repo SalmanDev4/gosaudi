@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1020944089560",
+    "firebase_url": "https://gosaudi-a76e4.firebaseio.com",
+    "project_id": "gosaudi-a76e4",
+    "storage_bucket": "gosaudi-a76e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020944089560:android:53166ab5ea96d9673af2ad",
+        "android_client_info": {
+          "package_name": "app.gosaudi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020944089560-vd2pmro1dq1a1hm8k8a9ivujm4iijtg1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB50FBN9TZdValCjwuyIGFUW7STq23A-EM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020944089560-vd2pmro1dq1a1hm8k8a9ivujm4iijtg1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

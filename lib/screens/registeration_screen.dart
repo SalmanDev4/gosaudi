@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gosaudi/components/custom_container.dart';
 import 'package:gosaudi/components/rounded_button.dart';
 import 'package:gosaudi/screens/login_screen.dart';
+import 'package:gosaudi/screens/welcome_screen.dart';
 
 class RegisterationScreen extends StatefulWidget {
   static String id = 'registeration_screen';
@@ -12,18 +14,27 @@ class RegisterationScreen extends StatefulWidget {
 }
 
 class _RegisterationScreenState extends State<RegisterationScreen> {
+  final _auth = FirebaseAuth.instance;
+
   final formKey = new GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String email;
   String password;
 
-  void validateForm() {
+  void validateForm() async {
     final form = formKey.currentState;
     if (form.validate()) {
       form.save();
-      print(email);
-      print(password);
+      try {
+        final newUser = await _auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        if (newUser != null) {
+          Navigator.popAndPushNamed(context, WelcomeScreen.id);
+        }
+      } catch (e) {
+        print(e);
+      }
       formKey.currentState.reset();
     } else {
       print('Form is invalid');
@@ -118,7 +129,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                     top: 167,
                     left: 40,
                     child: RoundedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         validateForm();
                       },
                       title: 'Register',
@@ -150,8 +161,9 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                               top: 0,
                               left: 138,
                               child: GestureDetector(
-                          onTap: () => Navigator.popAndPushNamed(context, LoginScreen.id),
-                                                              child: Text(
+                                onTap: () => Navigator.popAndPushNamed(
+                                    context, LoginScreen.id),
+                                child: Text(
                                   'Login',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(

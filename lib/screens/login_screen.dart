@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gosaudi/components/custom_container.dart';
 import 'package:gosaudi/components/rounded_button.dart';
 import 'package:gosaudi/screens/registeration_screen.dart';
+import 'package:gosaudi/screens/welcome_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = 'login_screen';
@@ -12,19 +14,26 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _auth = FirebaseAuth.instance;
+  
   final formKey = new GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String email;
   String password;
 
-  void validateForm() {
+  void validateForm() async{
     final form = formKey.currentState;
     if (form.validate()) {
       form.save();
-      print(email);
-      print(password);
-      formKey.currentState.reset();
+      try {
+        final user = await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+        if (user != null) {
+          Navigator.popAndPushNamed(context, WelcomeScreen.id);
+        }       
+        formKey.currentState.reset();
+      } catch (e) {}
     } else {
       print('Form is invalid');
     }
