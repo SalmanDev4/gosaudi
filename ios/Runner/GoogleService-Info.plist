@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1020944089560-fli3k6noo0cah7emdvirh8icgul24h8n.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1020944089560-fli3k6noo0cah7emdvirh8icgul24h8n</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBTNPOFQzRv6voGfQ3-OBB4BuFuRmj-UX8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1020944089560</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>app.gosaudi</string>
+	<key>PROJECT_ID</key>
+	<string>gosaudi-a76e4</string>
+	<key>STORAGE_BUCKET</key>
+	<string>gosaudi-a76e4.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1020944089560:ios:d2133cf6319bdef13af2ad</string>
+	<key>DATABASE_URL</key>
+	<string>https://gosaudi-a76e4.firebaseio.com</string>
+</dict>
+</plist>
