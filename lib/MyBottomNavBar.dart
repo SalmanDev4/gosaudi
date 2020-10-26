@@ -1,11 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gosaudi/screens/login_screen.dart';
+import 'package:gosaudi/screens/profile_screen.dart';
 import 'package:gosaudi/screens/registeration_screen.dart';
 import 'package:gosaudi/screens/welcome_screen.dart';
 
-class MyBottomNavBar extends StatelessWidget {
+class MyBottomNavBar extends StatefulWidget {
   const MyBottomNavBar({Key key}) : super(key: key);
 
+  @override
+  _MyBottomNavBarState createState() => _MyBottomNavBarState();
+}
+
+class _MyBottomNavBarState extends State<MyBottomNavBar> {
+  final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,7 +30,12 @@ class MyBottomNavBar extends StatelessWidget {
               color: Color(0xFF0F9A4F),
               iconSize: 32,
               onPressed: () {
-                Navigator.popAndPushNamed(context, LoginScreen.id);
+                if(_auth.currentUser != null){
+                  Navigator.pushNamed(context, ProfileScreen.id);
+                }else{
+                  Navigator.popAndPushNamed(context, LoginScreen.id);
+                }
+                
               }),
           IconButton(
               icon: Icon(Icons.home),
@@ -36,7 +49,7 @@ class MyBottomNavBar extends StatelessWidget {
               color: Color(0xFF0F9A4F),
               iconSize: 32,
               onPressed: () {
-                Navigator.popAndPushNamed(context, RegisterationScreen.id);
+                
               }),
         ],
       ),

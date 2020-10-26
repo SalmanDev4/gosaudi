@@ -13,7 +13,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  final _auth = FirebaseAuth.instance;
+  bool _disposed = false;
   String userid = '';
   @override
   void initState() {
@@ -21,12 +21,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.initState();
 getCurrentUser();
   }
+ 
 
 getCurrentUser() {
 FirebaseAuth.instance
   .authStateChanges()
   .listen((User user) {
-    if (user == null) {
+    if(!_disposed){
+      if (user == null) {
       setState(() {
         userid = 'please Sign in or Register';
       });
@@ -34,6 +36,7 @@ FirebaseAuth.instance
       setState(() {
         userid = user.email;
       });
+    }
     }
   });
 }
@@ -54,4 +57,10 @@ FirebaseAuth.instance
           ),
     );
   }
+   @override
+  void dispose() { 
+    _disposed = true;
+    super.dispose();
+  }
 }
+
