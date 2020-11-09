@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gosaudi/components/custom_container.dart';
@@ -22,6 +23,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
   String email;
   String password;
 
+
   void validateForm() async {
     final form = formKey.currentState;
     if (form.validate()) {
@@ -30,7 +32,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
         final newUser = await _auth.createUserWithEmailAndPassword(
             email: email, password: password);
         if (newUser != null) {
-          Navigator.popAndPushNamed(context, WelcomeScreen.id);
+          showDialog(context: context,builder: (context) => MyDialog(),);
         }
       } catch (e) {
         print(e);
@@ -131,6 +133,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                     child: RoundedButton(
                       onPressed: () async {
                         validateForm();
+                        
                       },
                       title: 'Register',
                       color: Color(0xFF0F9A4F),
@@ -161,8 +164,11 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
                               top: 0,
                               left: 138,
                               child: GestureDetector(
-                                onTap: () => Navigator.popAndPushNamed(
-                                    context, LoginScreen.id),
+                                // onTap: () => Navigator.popAndPushNamed(
+                                //     context, LoginScreen.id),
+                                onTap: () {
+                                  Navigator.popAndPushNamed(context, LoginScreen.id);
+                                },
                                 child: Text(
                                   'Login',
                                   textAlign: TextAlign.left,
@@ -181,5 +187,153 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
             )),
       )),
     );
+  }
+}
+
+class MyDialog extends StatefulWidget {
+  MyDialog({Key key}) : super(key: key);
+
+  @override
+  _MyDialogState createState() => _MyDialogState();
+}
+
+class _MyDialogState extends State<MyDialog> {
+  final _auth = FirebaseAuth.instance;
+
+  final _formKey = new GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _bioController = TextEditingController();
+  final _birthDateController = TextEditingController();
+  final _locationController = TextEditingController();
+  String _name;
+  String _bio;
+  String _birthDate;
+  String _location;
+  String _selectedRadio;
+
+  void _validateForm() async {
+    final form = _formKey.currentState;
+    if(_auth.currentUser == null){
+      print('Please sign/register');
+    }else {
+      String _userID = _auth.currentUser.uid;
+      String _userEmail = _auth.currentUser.email;
+      if (form.validate()) {
+      form.save();
+      try {
+        FirebaseFirestore.instance.collection("usersProfile").doc(_userID).set(
+          {
+            'email' : _userEmail,
+            'name' : _name,
+            'bio' : _bio,
+            'birth_date' : _birthDate,
+            'location' : _location,
+            'gender' : _selectedRadio
+          }
+        );
+      } catch (e) {
+        print(e);
+      }
+      _formKey.currentState.reset();
+    } else {
+      print('Form is invalid');
+    }
+    }
+    
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+            child: Container(
+              width: MediaQuery.of(context).size.width / 1.2,
+              height: MediaQuery.of(context).size.height / 1.8,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _nameController,
+                        decoration: InputDecoration(labelText: 'Name:'),
+                        validator: (value) =>
+                            value.isEmpty ? 'You should enter a Name' : null,
+                            onSaved: (newValue) => _name = newValue,
+                        maxLength: 20,
+                      ),
+                      TextFormField(
+                        controller: _bioController,
+                        decoration: InputDecoration(labelText: 'Bio:'),
+                        validator: (value) => value.isEmpty
+                            ? 'You should enter a Bio that describe you'
+                            : null,
+                            onSaved: (newValue) => _bio = newValue,
+                        maxLength: 160,
+                      ),
+                      TextFormField(
+                        controller: _birthDateController,
+                        decoration: InputDecoration(labelText: 'Birth Date:'),
+                        validator: (value) => value.isEmpty
+                            ? 'You should enter a Birth Date'
+                            : null,
+                            onSaved: (newValue) => _birthDate = newValue,
+                        keyboardType: TextInputType.datetime,
+                      ),
+                      TextFormField(
+                        controller: _locationController,
+                        decoration: InputDecoration(labelText: 'Location:'),
+                        validator: (value) => value.isEmpty
+                            ? 'You should enter a valid Location'
+                            : null,
+                            onSaved: (newValue) => _location = newValue,
+                        keyboardType: TextInputType.streetAddress,
+                        maxLength: 50,
+                      ),
+                      ButtonBar(
+                        alignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Radio(
+                            value: 'Male',
+                            groupValue: _selectedRadio,
+                            onChanged: (val) {
+                              print('$val is selected');
+                              setState(() {
+                                _selectedRadio = val;
+                              });
+                            },
+                            activeColor: Colors.green,
+                          ),
+                          Text('Male'),
+                          Radio(
+                            value: 'Female',
+                            groupValue: _selectedRadio,
+                            onChanged: (val) {
+                              print('$val is selected');
+                              setState(() {
+                                _selectedRadio = val;
+                              });
+                            },
+                            activeColor: Colors.green,
+                          ),
+                          Text('Female'),
+                        ],
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          _validateForm();
+                          Navigator.popAndPushNamed(context, WelcomeScreen.id);
+                        },
+                        child: Text('Submit',style: TextStyle(color: Colors.green),),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 }

@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gosaudi/screens/login_screen.dart';
 import 'package:gosaudi/screens/profile_screen.dart';
-import 'package:gosaudi/screens/registeration_screen.dart';
 import 'package:gosaudi/screens/welcome_screen.dart';
 
 class MyBottomNavBar extends StatefulWidget {

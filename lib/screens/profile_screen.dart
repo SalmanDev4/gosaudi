@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gosaudi/components/custom_container.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfileScreen extends StatefulWidget {
   static String id = 'profile_screen';
@@ -10,16 +12,36 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final _auth = FirebaseAuth.instance;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  String name;
+  String bio;
+  String gender;
+  String location;
+  String dob;
+  String documentId;
+
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('usersProfile');
     return SafeArea(
       child: CustomContainer(
-          body: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
+          body: StreamBuilder(
+            stream: users.doc(_auth.currentUser.uid).snapshots(),
+            builder:           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        // if (snapshot.connectionState == ConnectionState.done) {
+        //   return getUsersData(snapshot);
+        // }
+
+        // return new ListView(children: getUsersData(snapshot),);
+        // return new Text(snapshot.data.docs.map((e) => e['Name']).toList().toString());
+
+        return new Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -51,18 +73,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'NameNameNameNameNameName',
+                          snapshot.data.data()['name'],
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        Text('Bio MessageBio MessageBio MessageBio MessageBio MessageBio MessageBio MessageBio MessageBio Message'),
+                        Text(snapshot.data.data()['bio']),
                         Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Location'),
-                          Text('Born in dd/mm/yyyy'),
+                              Text(snapshot.data.data()['gender']),
+                              Text(snapshot.data.data()['location']),
+                              Row(
+                                children: [
+                                  Text('Born in '),
+                          Text(snapshot.data.data()['birth_date'])
+                                ],
+                              )
+                          
                             ],
                           ),
                         )
@@ -71,10 +100,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 )
               ],
-            ),
-          )
-        ],
-      )),
+            );
+
+
+      },
+            )
+          ),
     );
+  }
+
+  getUsersData(AsyncSnapshot<QuerySnapshot> snapshot) {
+    return snapshot.data.docs.map((doc) => new ListTile(title: new Text(doc["Name"]),
+    subtitle: new Text(doc["Bio"]),)).toList();
   }
 }

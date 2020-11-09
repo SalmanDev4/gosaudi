@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gosaudi/screens/login_screen.dart';
 import 'package:gosaudi/screens/profile_screen.dart';
 import 'package:gosaudi/screens/registeration_screen.dart';
+import 'package:gosaudi/screens/tickets_screen.dart';
 import 'package:gosaudi/screens/welcome_screen.dart';
 
 void main() async{
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.id: (context) => LoginScreen(),
         RegisterationScreen.id: (context) => RegisterationScreen(),
         ProfileScreen.id: (context) => ProfileScreen(),
+        TicketsScreen.id: (context) => TicketsScreen(),
       },
     );
   }

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:gosaudi/MyBottomNavBar.dart';
 
 class CustomContainer extends StatelessWidget {
-  CustomContainer({@required this.body});
+  CustomContainer({@required this.body, this.drawer, this.floatingActionButton});
 
   final Widget body;
+  final Widget floatingActionButton;
+  final Widget drawer;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,8 @@ class CustomContainer extends StatelessWidget {
     ),
     backgroundColor: Colors.transparent,
     body: body,
+    drawer: drawer,
+    floatingActionButton: floatingActionButton,
     bottomNavigationBar: MyBottomNavBar(),
         ),
       );
