@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gosaudi/MyBottomNavBar.dart';
+import 'package:gosaudi/components/MyBottomNavBar.dart';
 
 class CustomContainer extends StatelessWidget {
   CustomContainer({@required this.body, this.drawer, this.floatingActionButton});
@@ -26,7 +26,7 @@ class CustomContainer extends StatelessWidget {
     body: body,
     drawer: drawer,
     floatingActionButton: floatingActionButton,
-    bottomNavigationBar: MyBottomNavBar(),
+    // bottomNavigationBar: MyBottomNavBar(),
         ),
       );
   }
