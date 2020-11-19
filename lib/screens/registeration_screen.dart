@@ -6,6 +6,8 @@ import 'package:gosaudi/components/rounded_button.dart';
 import 'package:gosaudi/screens/login_screen.dart';
 import 'package:gosaudi/screens/welcome_screen.dart';
 
+final String screenName = 'Register';
+
 class RegisterationScreen extends StatefulWidget {
   static String id = 'registeration_screen';
   RegisterationScreen({Key key}) : super(key: key);
@@ -47,6 +49,7 @@ class _RegisterationScreenState extends State<RegisterationScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: CustomContainer(
+        title: Text(screenName),
           body: Center(
         child: Container(
             width: 230,
@@ -325,7 +328,7 @@ class _MyDialogState extends State<MyDialog> {
                       FlatButton(
                         onPressed: () {
                           _validateForm();
-                          Navigator.popAndPushNamed(context, WelcomeScreen.id);
+                          Navigator.pushReplacementNamed(context, WelcomeScreen.id);
                         },
                         child: Text('Submit',style: TextStyle(color: Colors.green),),
                       )

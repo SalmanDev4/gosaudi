@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:gosaudi/components/custom_container.dart';
 import 'package:gosaudi/components/my_custom_dialog.dart';
 
-final _firestore = FirebaseFirestore.instance;
+final CollectionReference _ticketsCollection = FirebaseFirestore.instance.collection('tickets');
+final String screenName = 'Tickets';
 
 class TicketsScreen extends StatefulWidget {
   static String id = 'tickets_screen';
@@ -16,8 +17,6 @@ class TicketsScreen extends StatefulWidget {
 
 class _TicketsScreenState extends State<TicketsScreen> {
   final _auth = FirebaseAuth.instance;
-
-  CollectionReference ticketsCollection = FirebaseFirestore.instance.collection('tickets');
   
   String eventName;
   String eventDescreption;
@@ -39,7 +38,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
       if (form.validate()) {
       form.save();
       try {
-        FirebaseFirestore.instance.collection("tickets").doc().set(
+        _ticketsCollection.doc().set(
           {
             'addBy' : _userEmail,
             'event_name' : eventName,
@@ -64,6 +63,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: CustomContainer(
+        title: Text(screenName),
         body: Container(
             padding: EdgeInsets.all(8.0),
             child: Column(
@@ -150,7 +150,7 @@ class TicketsStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _firestore.collection('tickets').orderBy('event_date', descending: true).snapshots(),
+        stream: _ticketsCollection.orderBy('event_date', descending: true).snapshots(),
         builder: (context, snapshot){
     if (!snapshot.hasData){
       return Center(

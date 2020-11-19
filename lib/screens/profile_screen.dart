@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gosaudi/screens/login_screen.dart';
 
+final String screenName = 'Bio';
+
 class ProfileScreen extends StatefulWidget {
   static String id = 'profile_screen';
   ProfileScreen({Key key}) : super(key: key);
@@ -36,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (!_disposed) {
         if (user == null) {
           setState(() {
-            Navigator.pushNamed(context, LoginScreen.id);
+            Navigator.popAndPushNamed(context, LoginScreen.id);
           });
         } else {
           setState(() {
@@ -54,6 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (userid != null) {
       return SafeArea(
         child: CustomContainer(
+          title: Text(screenName),
             body: StreamBuilder(
           stream: users.doc(userid).snapshots(),
           builder: (context, snapshot) {

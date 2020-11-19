@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:gosaudi/components/MyBottomNavBar.dart';
 
 class CustomContainer extends StatelessWidget {
-  CustomContainer({@required this.body, this.drawer, this.floatingActionButton});
+  CustomContainer({@required this.body,@required this.title, this.drawer, this.floatingActionButton,this.bottomNavBar});
 
   final Widget body;
   final Widget floatingActionButton;
   final Widget drawer;
+  final Widget bottomNavBar;
+  final Widget title;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class CustomContainer extends StatelessWidget {
           end: Alignment.bottomCenter)),
         child: Scaffold(
     appBar: AppBar(
-      title: Text('Go Saudi'),
+      title: title,
       backgroundColor: Colors.transparent,
       shadowColor: Colors.transparent,
     ),
@@ -26,7 +27,7 @@ class CustomContainer extends StatelessWidget {
     body: body,
     drawer: drawer,
     floatingActionButton: floatingActionButton,
-    // bottomNavigationBar: MyBottomNavBar(),
+    bottomNavigationBar: bottomNavBar,
         ),
       );
   }

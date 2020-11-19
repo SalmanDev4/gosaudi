@@ -1,9 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:gosaudi/screens/hotels_screen.dart';
+import 'package:gosaudi/screens/information_screen.dart';
 import 'package:gosaudi/screens/login_screen.dart';
 import 'package:gosaudi/screens/profile_screen.dart';
 import 'package:gosaudi/screens/registeration_screen.dart';
 import 'package:gosaudi/screens/tickets_screen.dart';
+import 'package:gosaudi/screens/trip_screen.dart';
 import 'package:gosaudi/screens/welcome_screen.dart';
 
 void main() async{
@@ -32,6 +35,9 @@ class MyApp extends StatelessWidget {
         RegisterationScreen.id: (context) => RegisterationScreen(),
         ProfileScreen.id: (context) => ProfileScreen(),
         TicketsScreen.id: (context) => TicketsScreen(),
+        InformationScreen.id: (context) => InformationScreen(),
+        HotelsScreen.id: (context) => HotelsScreen(),
+        TripScreen.id: (context) => TripScreen(),
       },
     );
   }
