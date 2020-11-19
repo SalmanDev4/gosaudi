@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:gosaudi/components/custom_container.dart';
 import 'package:gosaudi/components/my_custom_dialog.dart';
 
+// This is the Ticcketing screen
+
+//This to get reference of ticket in the Firebase.
 final CollectionReference _ticketsCollection = FirebaseFirestore.instance.collection('tickets');
 final String screenName = 'Tickets';
 
@@ -18,17 +21,18 @@ class TicketsScreen extends StatefulWidget {
 class _TicketsScreenState extends State<TicketsScreen> {
   final _auth = FirebaseAuth.instance;
   
-  String eventName;
-  String eventDescreption;
-  String eventDate;
-  String eventLocation;
-  int ticketsNum;
-  final _eventNameController = TextEditingController();
-  final _eventDescreptionController = TextEditingController();
-  final _eventDateController = TextEditingController();
-  final _eventLocationController = TextEditingController();
+  String _ticketName;
+  String _ticketDescription;
+  String _ticketDate;
+  String _ticketLocation;
+  int _ticketsNum;
+  final _ticketNameController = TextEditingController();
+  final _ticketDescreptionController = TextEditingController();
+  final _ticketDateController = TextEditingController();
+  final _ticketLocationController = TextEditingController();
   final _ticketsNumController = TextEditingController();
 
+// Valifation Form, submit if the data is valid.
   void validateForm() async {
     final form = CustomDialog.formKey.currentState;
     if(_auth.currentUser == null){
@@ -41,17 +45,20 @@ class _TicketsScreenState extends State<TicketsScreen> {
         _ticketsCollection.doc().set(
           {
             'addBy' : _userEmail,
-            'event_name' : eventName,
-            'event_descreption' : eventDescreption,
-            'event_location' : eventLocation,
-            'event_date' : eventDate,
-            'ticketsNum' : ticketsNum
+            'ticket_name' : _ticketName,
+            'ticket_description' : _ticketDescription,
+            'ticket_location' : _ticketLocation,
+            'ticket_date' : _ticketDate,
+            'ticketsNum' : _ticketsNum
           }
         );
       } catch (e) {
         print(e);
       }
       CustomDialog.formKey.currentState.reset();
+
+      // Showing notification
+      SnackBar(content: Text('Ticket has been added!'));
     } else {
       print('Form is invalid');
     }
@@ -81,41 +88,41 @@ class _TicketsScreenState extends State<TicketsScreen> {
               child: Column(
                 children: [
                   TextFormField(
-                    controller: _eventNameController,
-                    onSaved: (newValue) => eventName = newValue,
-                    decoration: InputDecoration(labelText: 'Event Name:'),
+                    controller: _ticketNameController,
+                    onSaved: (newValue) => _ticketName = newValue,
+                    decoration: InputDecoration(labelText: 'Ticket Name:'),
                         validator: (value) =>
-                            value.isEmpty ? 'You should enter an Event Name' : null,
+                            value.isEmpty ? 'You should enter a Ticket Name' : null,
                             maxLength: 60,
                   ),
                   TextFormField(
-                    controller: _eventDescreptionController,
-                    onSaved: (newValue) => eventDescreption = newValue,
-                    decoration: InputDecoration(labelText: 'Event Descreption:'),
+                    controller: _ticketDescreptionController,
+                    onSaved: (newValue) => _ticketDescription = newValue,
+                    decoration: InputDecoration(labelText: 'Ticket Descreption:'),
                         validator: (value) =>
-                            value.isEmpty ? 'You should enter an Event Descreption' : null,
+                            value.isEmpty ? 'You should enter a Ticket Descreption' : null,
                             maxLength: 200,
                   ),
                   TextFormField(
-                    controller: _eventDateController,
-                    onSaved: (newValue) => eventDate = newValue,
-                    decoration: InputDecoration(labelText: 'Event Date/Time:'),
+                    controller: _ticketDateController,
+                    onSaved: (newValue) => _ticketDate = newValue,
+                    decoration: InputDecoration(labelText: 'Ticket Date/Time:'),
                         validator: (value) =>
-                            value.isEmpty ? 'You should enter an Event DAte/Time' : null,
+                            value.isEmpty ? 'You should enter a Ticket Date/Time' : null,
                             keyboardType: TextInputType.datetime,
                   ),
                   TextFormField(
-                    controller: _eventLocationController,
-                    onSaved: (newValue) => eventLocation = newValue,
-                    decoration: InputDecoration(labelText: 'Event Location:'),
+                    controller: _ticketLocationController,
+                    onSaved: (newValue) => _ticketLocation = newValue,
+                    decoration: InputDecoration(labelText: 'Ticket Location:'),
                         validator: (value) =>
-                            value.isEmpty ? 'You should enter an Event Location' : null,
+                            value.isEmpty ? 'You should enter an Ticket Location' : null,
                             maxLength: 60,
                             keyboardType: TextInputType.streetAddress,
                   ),
                   TextFormField(
                     controller: _ticketsNumController,
-                    onSaved: (newValue) => ticketsNum = int.parse(newValue),
+                    onSaved: (newValue) => _ticketsNum = int.parse(newValue),
                     decoration: InputDecoration(labelText: 'Tickets Numbers:'),
                         validator: (value) =>
                             value.isEmpty ? 'You should enter a Tickets Numbers' : null,
@@ -145,12 +152,13 @@ class _TicketsScreenState extends State<TicketsScreen> {
   }
 }
 
+// This stream to get data from Firebase database.
 class TicketsStream extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: _ticketsCollection.orderBy('event_date', descending: true).snapshots(),
+        stream: _ticketsCollection.orderBy('ticket_date', descending: true).snapshots(),
         builder: (context, snapshot){
     if (!snapshot.hasData){
       return Center(
@@ -160,27 +168,29 @@ class TicketsStream extends StatelessWidget {
       );
     }
       final tickets = snapshot.data.documents;
-    List<EventCard> eventCards = [];
+    List<TicketCard> ticketsCards = [];
     for (var ticket in tickets) {
-      final eventName = ticket.data()['event_name'];
-      final eventDate = ticket.data()["event_date"];
-      final eventDescreption= ticket.data()["event_descreption"];
-      final eventLocation = ticket.data()["event_location"];
+      final ticketName = ticket.data()['ticket_name'];
+      final ticketDate = ticket.data()["ticket_date"];
+      final ticketDescription= ticket.data()["ticket_description"];
+      final ticketLocation = ticket.data()["ticket_location"];
       final ticketNum = ticket.data()["ticketsNum"];
+      final addBy = ticket.data()["addBy"];
 
-      final eventCard = EventCard(
-        eventName: eventName,
-        eventDate: eventDate,
-        eventDescreption: eventDescreption,
-        eventLocation: eventLocation,
+      final ticketCard = TicketCard(
+        ticketName: ticketName,
+        ticketDate: ticketDate,
+        ticketDescription: ticketDescription,
+        ticketLocation: ticketLocation,
         ticketNum: ticketNum,
+        addBy: addBy,
       );
-      eventCards.add(eventCard); 
+      ticketsCards.add(ticketCard); 
     }
     return Expanded(
       child: ListView(
         padding: EdgeInsets.all(8.00),
-        children: eventCards,
+        children: ticketsCards,
       ),
     );
         },
@@ -188,20 +198,22 @@ class TicketsStream extends StatelessWidget {
   }
 }
 
-class EventCard extends StatelessWidget {
-EventCard({this.eventDate,this.eventDescreption,this.eventLocation,this.eventName,this.ticketNum});
+//This calss to represent the data in Card widget.
+class TicketCard extends StatelessWidget {
+TicketCard({this.ticketDate,this.ticketDescription,this.ticketLocation,this.ticketName,this.ticketNum,this.addBy});
 
-final String eventName;
-final String eventDate;
-final String eventDescreption;
-final String eventLocation;
+final String ticketName;
+final String ticketDate;
+final String ticketDescription;
+final String ticketLocation;
 final int ticketNum;
+final String addBy;
 
 
   @override
   Widget build(BuildContext context) {
 return Container(
-      height: 200,
+      height: 350,
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -234,21 +246,21 @@ return Container(
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              Text(eventName),
-                              Text(eventDate),
+                              Text(ticketName),
+                              Text(ticketDate),
                               
                             ],
                           ),
                         ),
                         Flexible(
-                          flex: 2,
+                          flex: 3,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Text(eventDescreption),
-                                Text(eventLocation),
+                                Text(ticketDescription),
+                                Text(ticketLocation),
                               ],
                             ),
                           ),
@@ -259,6 +271,16 @@ return Container(
                             padding: const EdgeInsets.only(top: 16.0),
                             child: Text('Remaining Tickets: $ticketNum',style: TextStyle(
                               fontWeight: FontWeight.bold,
+                            ),),
+                          ),
+                        ),
+                        Flexible(
+                          flex: 1,
+                                                  child: Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Text('Contact: $addBy',style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.indigoAccent
                             ),),
                           ),
                         ),

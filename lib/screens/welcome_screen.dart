@@ -9,6 +9,8 @@ import 'package:gosaudi/screens/profile_screen.dart';
 import 'package:gosaudi/screens/tickets_screen.dart';
 import 'package:gosaudi/screens/trip_screen.dart';
 
+// This is the main screen of the App.
+
 final String screenName = 'Go Saudi App';
 
 class WelcomeScreen extends StatefulWidget {
@@ -27,7 +29,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.initState();
     getCurrentUser();
   }
-
+// Get current loggedIn user or showing as a Guest.
   getCurrentUser() {
     FirebaseAuth.instance.authStateChanges().listen((User user) {
       if (!_disposed) {
@@ -48,17 +50,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: CustomContainer(
-        title: Text(screenName),
+          title: Text(screenName),
           drawer: Drawer(
             child: ListView(
               children: [
                 DrawerHeader(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-          colors: [Color(0xFF0F9A4F), Color(0xFFE7DC7D)],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter)),
-                  
+                      gradient: LinearGradient(
+                          colors: [Color(0xFF0F9A4F), Color(0xFFE7DC7D)],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter)),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -67,7 +68,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ],
                   ),
                 ),
-
                 ListTile(
                   leading: Icon(Icons.person),
                   title: Text('Profile'),
@@ -103,7 +103,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     Navigator.pushNamed(context, TripScreen.id);
                   },
                 ),
-                // SizedBox(height: MediaQuery.of(context).size.height /2.5,),
                 Divider(),
                 ListTile(
                   leading: Icon(Icons.logout),
@@ -115,15 +114,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ],
             ),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Information:'),
-              InformationList(),
-              Text('Tickets:'),
-              TicketsList(),
-            ],
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Information:'),
+                InformationList(),
+                SizedBox(
+                  height: 10,
+                ),
+                Text('Tickets:'),
+                TicketsList(),
+                                SizedBox(
+                  height: 10,
+                ),
+                Text('Trip Plans:'),
+                TripList(),
+              ],
+            ),
           )),
     );
   }
@@ -134,7 +144,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.dispose();
   }
 }
-
+//This class is to show the TicketList data
 class TicketsList extends StatelessWidget {
   const TicketsList({
     Key key,
@@ -145,14 +155,14 @@ class TicketsList extends StatelessWidget {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('tickets')
-          .orderBy('event_date', descending: true)
+          .orderBy('ticket_date', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Column(
             children: [
               Container(
-                height: 184.0,
+                height: 200.0,
                 child: ListView.builder(
                   itemCount: snapshot.data.documents.length,
                   scrollDirection: Axis.horizontal,
@@ -170,7 +180,7 @@ class TicketsList extends StatelessWidget {
                                 flex: 1,
                                 child: Text(
                                   snapshot.data.documents[position]
-                                      ['event_name'],
+                                      ['ticket_name'],
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -178,7 +188,7 @@ class TicketsList extends StatelessWidget {
                                 flex: 1,
                                 child: Text(
                                   snapshot.data.documents[position]
-                                      ['event_date'],
+                                      ['ticket_date'],
                                   style: TextStyle(fontSize: 12),
                                 ),
                               ),
@@ -186,14 +196,14 @@ class TicketsList extends StatelessWidget {
                                 flex: 1,
                                 child: Text(
                                   snapshot.data.documents[position]
-                                      ['event_location'],
+                                      ['ticket_location'],
                                   style: TextStyle(fontSize: 12),
                                 ),
                               ),
                               Flexible(
                                 flex: 3,
                                 child: Text(snapshot.data.documents[position]
-                                    ['event_descreption']),
+                                    ['ticket_description']),
                               ),
                             ],
                           ),
@@ -205,15 +215,19 @@ class TicketsList extends StatelessWidget {
               )
             ],
           );
+        }else{
+          return Center(
+            child: Container(
+            child: Text('There is no data'),
+        ),
+          );
         }
-        return Container(
-          child: Text('There is no data'),
-        );
       },
     );
   }
 }
 
+//This class is to show the InformationList data
 class InformationList extends StatelessWidget {
   const InformationList({
     Key key,
@@ -231,7 +245,109 @@ class InformationList extends StatelessWidget {
           return Column(
             children: [
               Container(
-                height: 184.0,
+                height: 250.0,
+                child: ListView.builder(
+                  itemCount: snapshot.data.documents.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, position) {
+                    return Card(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              snapshot.data.documents[position]['picURL'],
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        width: 180,
+                        child: Opacity(
+                          opacity: 0.75,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xFFFFFFFF),
+                                      Color(0xFF000000)
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(1))),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    flex: 1,
+                                    child: Text(
+                                      snapshot.data.documents[position]
+                                          ['city_name'],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 1,
+                                    child: Text(
+                                      snapshot.data.documents[position]
+                                          ['country_name'],
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.white),
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 3,
+                                    child: Text(
+                                      snapshot.data.documents[position]
+                                          ['about'],
+                                      style: TextStyle(
+                                          fontSize: 12, color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              )
+            ],
+          );
+        }
+        return Container(
+          child: Text('There is no data'),
+        );
+      },
+    );
+  }
+}
+//This class is to show the TripList data
+class TripList extends StatelessWidget {
+  const TripList({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('trip')
+          .orderBy('timestamp', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Column(
+            children: [
+              Container(
+                height: 200.0,
                 child: ListView.builder(
                   itemCount: snapshot.data.documents.length,
                   scrollDirection: Axis.horizontal,
@@ -263,10 +379,8 @@ class InformationList extends StatelessWidget {
                               ),
                               Flexible(
                                 flex: 3,
-                                child: Text(
-                                  snapshot.data.documents[position]['about'],
-                                  style: TextStyle(fontSize: 12),
-                                ),
+                                child: Text(snapshot.data.documents[position]
+                                    ['trip_plan']),
                               ),
                             ],
                           ),
@@ -278,10 +392,13 @@ class InformationList extends StatelessWidget {
               )
             ],
           );
+        }else{
+          return Center(
+            child: Container(
+            child: Text('There is no data'),
+        ),
+          );
         }
-        return Container(
-          child: Text('There is no data'),
-        );
       },
     );
   }

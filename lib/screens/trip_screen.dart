@@ -5,6 +5,9 @@ import 'package:gosaudi/components/custom_container.dart';
 import 'package:gosaudi/components/my_custom_dialog.dart';
 import 'package:intl/intl.dart';
 
+//This is the Trip planning screen
+
+//This is the reference in the Firebase database
 final CollectionReference _tripCollection = FirebaseFirestore.instance.collection('trip');
 final String screenName = 'Trip Planner';
 
@@ -19,9 +22,6 @@ class TripScreen extends StatefulWidget {
 
 class _TripScreenState extends State<TripScreen> {
   final _auth = FirebaseAuth.instance;
-
-  
-  
   String countryName;
   String cityName;
   String tripPlan;
@@ -29,6 +29,7 @@ class _TripScreenState extends State<TripScreen> {
   final _cityNameController = TextEditingController();
   final _aboutController = TextEditingController();
 
+// VAlidate and submit the form
   void validateForm() async {
     final form = CustomDialog.formKey.currentState;
     if(_auth.currentUser == null){
@@ -50,6 +51,9 @@ class _TripScreenState extends State<TripScreen> {
       } catch (e) {
         print(e);
       }
+
+      //Showing notification
+      SnackBar(content: Text('Trip plan has been added!'));
       CustomDialog.formKey.currentState.reset();
     } else {
       print('Form is invalid');
@@ -124,6 +128,7 @@ class _TripScreenState extends State<TripScreen> {
   }
 }
 
+// This to get data from Firebase database.
 class TripStream extends StatelessWidget {
 
   @override
@@ -167,6 +172,7 @@ class TripStream extends StatelessWidget {
   }
 }
 
+//Representing data in Card widget.
 class TripCard extends StatelessWidget {
 TripCard({this.countryName,this.tripPlan,this.cityName,this.timestamp,this.addBy});
 
@@ -196,7 +202,7 @@ return Container(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [ 
-                          Text(addBy,style: TextStyle(color: Colors.blueAccent),),
+                          Text('Contact: $addBy',style: TextStyle(color: Colors.indigoAccent),),
                           Text(DateFormat.yMMMMd().add_jm().format(now)),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,

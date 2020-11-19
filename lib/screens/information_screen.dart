@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:gosaudi/components/custom_container.dart';
 import 'package:gosaudi/components/my_custom_dialog.dart';
 import 'package:gosaudi/screens/login_screen.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
+// This is the Information Screen
 
+// Reference of information in FireBase Database
 final CollectionReference _informationCollection = FirebaseFirestore.instance.collection('information');
 final String screenName = 'Information';
 
@@ -19,18 +22,17 @@ class InformationScreen extends StatefulWidget {
 
 class _InformationScreenState extends State<InformationScreen> {
   final _auth = FirebaseAuth.instance;
-
-  
-  
   String countryName;
   String cityName;
   String about;
   String picURL = "test";
+  double rate;
   final _countyNameController = TextEditingController();
   final _cityNameController = TextEditingController();
   final _aboutController = TextEditingController();
     final _picURLController = TextEditingController();
 
+// Validate and submit the form
   void validateForm() async {
     final form = CustomDialog.formKey.currentState;
     if(_auth.currentUser == null){
@@ -47,6 +49,7 @@ class _InformationScreenState extends State<InformationScreen> {
             'city_name' : cityName,
             'about' : about,
             'picURL' : picURL,
+            'rating' : rate,
             'timestamp' : Timestamp.now()
           }
         );
@@ -54,6 +57,7 @@ class _InformationScreenState extends State<InformationScreen> {
         print(e);
       }
       CustomDialog.formKey.currentState.reset();
+      SnackBar(content: Text('Information has been added!'));
     } else {
       print('Form is invalid');
     }
@@ -82,6 +86,7 @@ class _InformationScreenState extends State<InformationScreen> {
             showDialog(context: context,
             builder: (context) => CustomDialog(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextFormField(
                     controller: _countyNameController,
@@ -106,6 +111,7 @@ class _InformationScreenState extends State<InformationScreen> {
                         validator: (value) =>
                             value.isEmpty ? 'You should enter a data about the city' : null,
                             maxLength: 300,
+                            maxLines: 3,
                   ),
                   TextFormField(
                     controller: _picURLController,
@@ -113,6 +119,12 @@ class _InformationScreenState extends State<InformationScreen> {
                     decoration: InputDecoration(labelText: 'Picture URL:'),
                         validator: (value) =>
                             value.isEmpty ? 'You should enter a URL of the Picture' : null,
+                  ),
+                  SmoothStarRating(
+                    allowHalfRating: false,
+                    onRated: (rating) {
+                      rate=rating;
+                    },
                   ),
                   FlatButton(
                         onPressed: () {
@@ -125,7 +137,7 @@ class _InformationScreenState extends State<InformationScreen> {
                 ],
               ), 
               width: MediaQuery.of(context).size.width / 1.2, 
-              height: MediaQuery.of(context).size.height / 1.8
+              height: MediaQuery.of(context).size.height / 1.5
               ),
             );
             
@@ -140,6 +152,7 @@ class _InformationScreenState extends State<InformationScreen> {
   }
 }
 
+// Get data from Firebase database
 class InformationStream extends StatelessWidget {
 
   @override
@@ -162,6 +175,7 @@ class InformationStream extends StatelessWidget {
       final about= data.data()["about"];
       final timestamp = data.data()["timestamp"];
       final picURL = data.data()["picURL"];
+      final rating = data.data()["rating"];
 
       final informationCard = InformationCard(
         countryName: country,
@@ -169,6 +183,7 @@ class InformationStream extends StatelessWidget {
         about: about,
         timestamp: timestamp,
         picURL: picURL,
+        rating: rating.toDouble(),
       );
       informationCards.add(informationCard); 
     }
@@ -183,14 +198,16 @@ class InformationStream extends StatelessWidget {
   }
 }
 
+// Representing data using Card Widget.
 class InformationCard extends StatelessWidget {
-InformationCard({this.countryName,this.about,this.cityName,this.picURL,this.timestamp});
+InformationCard({this.countryName,this.about,this.cityName,this.picURL,this.timestamp,this.rating});
 
 final String countryName;
 final String cityName;
 final String about;
 final String picURL;
 final Timestamp timestamp;
+final dynamic rating;
 
 
   @override
@@ -232,7 +249,11 @@ return Container(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                
+                                SmoothStarRating(
+                                  allowHalfRating: false,
+                                  isReadOnly: true,
+                                  rating: rating.toDouble(),
+                                ),
                                 Text(countryName),
                                 Text(cityName),
                                 Text(about),

@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gosaudi/screens/login_screen.dart';
 
+// This screen shows the Profile of the user.
+
 final String screenName = 'Bio';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,7 +17,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // final _auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   bool _disposed = false;
 
@@ -33,11 +34,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     getCurrentUser();
   }
 
+// Get current loggedIn user from Firebase Database
   getCurrentUser() {
     FirebaseAuth.instance.authStateChanges().listen((User user) {
       if (!_disposed) {
         if (user == null) {
           setState(() {
+            //Navigate to Login Screen if user is not loggedIn or don't have account
             Navigator.popAndPushNamed(context, LoginScreen.id);
           });
         } else {
@@ -51,6 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get reference of Firebase Database that have usersProfile data.
     CollectionReference users =
         FirebaseFirestore.instance.collection('usersProfile');
     if (userid != null) {
@@ -146,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 )
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
