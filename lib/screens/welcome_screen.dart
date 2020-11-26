@@ -29,6 +29,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.initState();
     getCurrentUser();
   }
+
 // Get current loggedIn user or showing as a Guest.
   getCurrentUser() {
     FirebaseAuth.instance.authStateChanges().listen((User user) {
@@ -117,7 +118,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SingleChildScrollView(
-                          child: Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -128,7 +129,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                   Text('Tickets:'),
                   TicketsList(),
-                                  SizedBox(
+                  SizedBox(
                     height: 10,
                   ),
                   Text('Trip Plans:'),
@@ -146,6 +147,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.dispose();
   }
 }
+
 //This class is to show the TicketList data
 class TicketsList extends StatelessWidget {
   const TicketsList({
@@ -217,11 +219,11 @@ class TicketsList extends StatelessWidget {
               )
             ],
           );
-        }else{
+        } else {
           return Center(
             child: Container(
-            child: Text('There is no data'),
-        ),
+              child: Text('There is no data'),
+            ),
           );
         }
       },
@@ -331,6 +333,7 @@ class InformationList extends StatelessWidget {
     );
   }
 }
+
 //This class is to show the TripList data
 class TripList extends StatelessWidget {
   const TripList({
@@ -394,11 +397,11 @@ class TripList extends StatelessWidget {
               )
             ],
           );
-        }else{
+        } else {
           return Center(
             child: Container(
-            child: Text('There is no data'),
-        ),
+              child: Text('There is no data'),
+            ),
           );
         }
       },

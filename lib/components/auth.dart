@@ -13,7 +13,7 @@ class Auth implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   @override
   Future<String> signUpWithEmail(String email, String password) async {
-    UserCredential user = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+    UserCredential user = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
     try{
       if(user.user.emailVerified) return user.user.uid;
     } catch (e){

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gosaudi/components/custom_container.dart';
 import 'package:gosaudi/components/my_custom_dialog.dart';
+import 'package:gosaudi/screens/login_screen.dart';
 
 // This is the Ticcketing screen
 
@@ -83,6 +84,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
           ),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
+            if(_auth.currentUser != null){ 
             showDialog(context: context,
             builder: (context) => CustomDialog(
               child: Column(
@@ -143,7 +145,9 @@ class _TicketsScreenState extends State<TicketsScreen> {
               height: MediaQuery.of(context).size.height / 1.8
               ),
             );
-            
+            }else{
+            Navigator.pushNamed(context, LoginScreen.id);
+          }
           },
           child: Icon(Icons.add),
           ),

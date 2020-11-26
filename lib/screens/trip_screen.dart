@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gosaudi/components/custom_container.dart';
 import 'package:gosaudi/components/my_custom_dialog.dart';
+import 'package:gosaudi/screens/login_screen.dart';
 import 'package:intl/intl.dart';
 
 //This is the Trip planning screen
@@ -77,7 +78,7 @@ class _TripScreenState extends State<TripScreen> {
           ),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
-            
+            if(_auth.currentUser != null){
             showDialog(context: context,
             builder: (context) => CustomDialog(
               child: Column(
@@ -120,6 +121,9 @@ class _TripScreenState extends State<TripScreen> {
               height: MediaQuery.of(context).size.height / 1.8
               ),
             );
+            }else{
+            Navigator.pushNamed(context, LoginScreen.id);
+          }
           },
           child: Icon(Icons.add),
           ),
