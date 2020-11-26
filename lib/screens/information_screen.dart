@@ -30,7 +30,7 @@ class _InformationScreenState extends State<InformationScreen> {
   final _countyNameController = TextEditingController();
   final _cityNameController = TextEditingController();
   final _aboutController = TextEditingController();
-    final _picURLController = TextEditingController();
+  final _picURLController = TextEditingController();
 
 // Validate and submit the form
   void validateForm() async {

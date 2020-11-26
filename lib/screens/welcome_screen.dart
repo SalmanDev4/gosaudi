@@ -116,23 +116,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Information:'),
-                InformationList(),
-                SizedBox(
-                  height: 10,
-                ),
-                Text('Tickets:'),
-                TicketsList(),
-                                SizedBox(
-                  height: 10,
-                ),
-                Text('Trip Plans:'),
-                TripList(),
-              ],
+            child: SingleChildScrollView(
+                          child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Information:'),
+                  InformationList(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text('Tickets:'),
+                  TicketsList(),
+                                  SizedBox(
+                    height: 10,
+                  ),
+                  Text('Trip Plans:'),
+                  TripList(),
+                ],
+              ),
             ),
           )),
     );
